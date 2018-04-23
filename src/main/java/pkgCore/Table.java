@@ -1,42 +1,66 @@
 package pkgCore;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.UUID;
 
-public class Table {
+import pkgEnum.eGameType;
+
+public class Table implements Serializable {
 
 	private UUID TableID;
-	private HashMap<UUID, Player> hmTablePlayers = new HashMap<UUID,Player>();
+	private HashMap<UUID, Player> hmTablePlayers = new HashMap<UUID, Player>();
+
+	private Deck TableDeck;
 	
 	public Table() {
 		super();
 		this.TableID = UUID.randomUUID();
 	}
 	
-	public void AddPlayerToTable(Player p)
+	protected void CreateDeck(eGameType eGT)
 	{
-		hmTablePlayers.put(p.getPlayerID(), p);
+		switch (eGT)
+		{
+		case BLACKJACK:
+			TableDeck = new Deck(6);
+			break;
+		case POKER:
+			TableDeck = new Deck();
+			break;
+		}
+			
 	}
-	
-	public void RemovePlayerFromTable(Player p)
-	{
+
+	public void AddPlayerToTable(Player p) {
+
+			hmTablePlayers.put(p.getPlayerID(), p);
+	}
+
+	public void RemovePlayerFromTable(Player p) {
 		hmTablePlayers.remove(p.getPlayerID());
+
 	}
-	
-	public Player GetPlayerFromTable(Player p)
-	{
+
+	public Player GetPlayerFromTable(Player p) {
 		return hmTablePlayers.get(p.getPlayerID());
+
+	}
+
+	public void ClearTable() {
+		hmTablePlayers.clear();
+		
+	}
+
+	public ArrayList<Player> GetTablePlayers() {
+		
+		return new ArrayList<Player> (hmTablePlayers.values());
+	}
+
+	public Deck getTableDeck() {
+		return TableDeck;
 	}
 	
-	public void ClearTable()
-	{
-		hmTablePlayers.clear();
-	}
-	// told us to add in class
-	public ArrayList<Player> GetTable()
-	{
-		ArrayList<Player> players = new ArrayList<Player>(hmTablePlayers.values());
-		return players;
-	}
 }
